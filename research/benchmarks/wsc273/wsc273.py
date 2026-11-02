@@ -6,9 +6,11 @@ Rules and thresholds: PROTOCOL-space.md.
 import argparse
 import gzip
 import hashlib
+import itertools
 import json
 import os
 import pathlib
+import statistics
 import sys
 
 KATALOG = pathlib.Path(__file__).resolve().parent
@@ -27,6 +29,7 @@ PROG_ZGODNOSCI = 1e-3
 MODELE = {"slayer-1.06": "slayer", "bloom-560m": "hf"}
 KONTROLA = {"model": "bigscience/bloom-560m", "wartosc": 0.6666666666666666, "se": 0.028583097523751506, "n": 273}
 PROG_KONTROLI = (0.6095, 0.7238)
+POLA_TRESCI = ("text", "pronoun", "pronoun_loc", "options", "label")
 
 
 def kanoniczny(doc):
@@ -146,15 +149,48 @@ def porownanie(wartosc, se, baza):
             "werdykt": "pewne" if abs(z) >= 3 else "prawdopodobne" if abs(z) >= 2 else "szum"}
 
 
+def wobec_wiekszosciowej(oceny):
+    """Both predictors answer the same questions, so the SE of the difference is paired (research/README.md)."""
+    klasa = max((0, 1), key=lambda i: sum(o["gold"] == i for o in oceny))
+    reszty = [o["acc"] - (o["gold"] == klasa) for o in oceny]
+    return porownanie(statistics.fmean(o["acc"] for o in oceny), srednia_z_niepewnoscia(reszty)["se"],
+                      statistics.fmean(o["gold"] == klasa for o in oceny))
+
+
+def pola(dokumenty, klucze):
+    return [{k: d[k] for k in klucze} for d in dokumenty]
+
+
+def bez_sortowania(dokumenty):
+    return [hashlib.sha256(json.dumps(d, ensure_ascii=False).encode("utf-8")).hexdigest() for d in dokumenty]
+
+
 def warianty(pelne, surowe, przetworzone):
     """Slayer on the samples from each document identity, as subsets of the full run."""
     wynik = {}
     for nazwa, ids in {"indeks_wiersza": [str(i) for i in range(len(pelne))],
                        "przed_process_docs": tozsamosci(surowe),
-                       "po_process_docs": tozsamosci(przetworzone)}.items():
+                       "po_process_docs": tozsamosci(przetworzone),
+                       "przed_process_docs_bez_sort_keys": bez_sortowania(surowe),
+                       "po_process_docs_bez_sort_keys": bez_sortowania(przetworzone),
+                       "pola_tresci": tozsamosci(pola(przetworzone, POLA_TRESCI))}.items():
         wiersz = srednia_z_niepewnoscia([pelne[i]["acc"] for i in panel_z(ids)])
         wynik[nazwa] = {k: wiersz[k] for k in ("value", "n", "se")}
     return wynik
+
+
+def podzbiory_pol(pelne, przetworzone):
+    """Sample value for every strict subset of the fields that keeps `text` and `options`."""
+    reszta = [k for k in przetworzone[0] if k not in ("text", "options")]
+    kombinacje = [("text", "options", *c) for r in range(len(reszta)) for c in itertools.combinations(reszta, r)]
+    wartosci = [statistics.fmean(pelne[i]["acc"] for i in panel_z(tozsamosci(pola(przetworzone, k))))
+                for k in kombinacje]
+    return {"n": len(wartosci), "min": min(wartosci), "mediana": statistics.median(wartosci), "max": max(wartosci)}
+
+
+def sd_podproby(pelne, n=ROZMIAR_PANELU):
+    """SD of the mean of a random n-of-N subsample of a fixed run: what drawing another sample costs by itself."""
+    return (statistics.variance(w["acc"] for w in pelne) / n * (1 - n / len(pelne))) ** 0.5
 
 
 def cmd_report(_):
@@ -173,18 +209,20 @@ def cmd_report(_):
     wynik_kontroli = srednia_z_niepewnoscia([w["acc"] for w in kontrola])
     assert PROG_KONTROLI[0] <= wynik_kontroli["value"] <= PROG_KONTROLI[1], wynik_kontroli
     wynik_pelny, wynik_panel = podsumuj(pelny, klasy), podsumuj(probka, klasy)
-    wobec_baz = lambda w: {"wobec_losowej": porownanie(w["value"], w["se"], w["bazy"]["chance_value"]),
-                           "wobec_wiekszosciowej": porownanie(w["value"], w["se"], w["bazy"]["majority_value"])}
+    wobec_baz = lambda w, oceny: {"wobec_losowej": porownanie(w["value"], w["se"], w["bazy"]["chance_value"]),
+                                  "wobec_wiekszosciowej": wobec_wiekszosciowej(oceny)}
     warianty_wyniku = warianty(pelny, dokumenty_surowe(obiekt), docs)
     wartosci_wariantow = [w["value"] for w in warianty_wyniku.values()]
     RAPORT.write_text(json.dumps({
         "kontrola": {**wynik_kontroli, "opublikowana": KONTROLA["wartosc"], "se_opublikowane": KONTROLA["se"],
                      "porownanie": porownanie(wynik_kontroli["value"], KONTROLA["se"], KONTROLA["wartosc"])},
-        "slayer_panel200": {**wynik_panel, **wobec_baz(wynik_panel)},
-        "slayer_pelny": {**wynik_pelny, **wobec_baz(wynik_pelny)},
+        "slayer_panel200": {**wynik_panel, **wobec_baz(wynik_panel, probka)},
+        "slayer_pelny": {**wynik_pelny, **wobec_baz(wynik_pelny, pelny)},
         "zgodnosc_panel_pelny": {"max_roznica_loglik": roznica, "rozne_acc": rozne_acc},
         "warianty_tozsamosci": warianty_wyniku,
         "rozstep_wariantow": max(wartosci_wariantow) - min(wartosci_wariantow),
+        "podzbiory_pol": podzbiory_pol(pelny, docs),
+        "sd_podproby_200": sd_podproby(pelny),
     }, indent=1, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
 
 

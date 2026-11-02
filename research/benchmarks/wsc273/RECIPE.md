@@ -21,8 +21,9 @@ nie zapisano w czasie pomiaru: „nie zapisano”.
 - Precyzja: float32, batch 1.
 - Sprzęt: CPU, Windows 11 x86-64, bez GPU i bez płatnej instancji; model procesora i liczba wątków: nie zapisano.
 - Data: 2026-11-02.
-- Protokół zapisany przed pomiarem: [`PROTOCOL-space.md`](PROTOCOL-space.md). Próbka zamrożona w
-  [`panel200.json`](panel200.json) przed pierwszym uruchomieniem modelu. <!-- liczba-spoza-wynikow: nazwa pliku -->
+- Protokół: [`PROTOCOL-space.md`](PROTOCOL-space.md). Próbka zamrożona w [`panel200.json`](panel200.json) przed <!-- liczba-spoza-wynikow: nazwa pliku -->
+  pierwszym uruchomieniem modelu. Wszystko to weszło do repo jednym commitem z wynikami, więc historia gita tej
+  kolejności nie potwierdza.
 
 Próbkę odtwarzasz bez wag:
 
@@ -34,6 +35,9 @@ python benchmarks/wsc273/wsc273.py panel
 
 - Model: [`SlayerLab/Slayer1B-1.06` @ `ef81be58742544ad32e1afab38db011fec209609`](https://huggingface.co/SlayerLab/Slayer1B-1.06/tree/ef81be58742544ad32e1afab38db011fec209609), <!-- liczba-spoza-wynikow: nazwa modelu w adresie URL -->
   nakładka `common/slayer_lm.py`, znane rozbieżności nakładki: `common/RECIPE.md`.
+- BOS: model nie ma `tokenizer_config.json`, a `tokenizer.json` nie ma post-processora, więc tokenizer BOS nie dodaje.
+  Nakładka dodaje jeden BOS (`<|endoftext|>`) przed kontekstem. Ustalone po pomiarze z plików i kodu; log przebiegu tego
+  nie zapisał.
 - Komenda:
 
 ```bash
@@ -61,6 +65,9 @@ python benchmarks/wsc273/wsc273.py evaluate --model slayer-1.06 --model_path <sl
 
 - Model: [`bigscience/bloom-560m` @ `ac2ae5fab2ce3f9f40dc79b5ca9f637430d24971`](https://huggingface.co/bigscience/bloom-560m/tree/ac2ae5fab2ce3f9f40dc79b5ca9f637430d24971), <!-- liczba-spoza-wynikow: nazwa modelu w adresie URL -->
   `HFLM` z lm-eval.
+- BOS: `tokenizer_config.json` nie ma `add_bos_token`, tokenizer BOS nie dodaje, a `HFLM` ma domyślnie
+  `add_bos_token=False`, więc kontrola liczona jest bez BOS. Ustalone po pomiarze z plików i kodu; log przebiegu tego nie
+  zapisał.
 - Komenda:
 
 ```bash

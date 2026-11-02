@@ -69,6 +69,34 @@ def test_rows_are_sorted_by_document_index(m):
     assert [w["k"] for w in m.wiersze([make(2), make(0), make(1)])] == [0, 1, 2]
 
 
+def test_tied_loglikelihoods_take_the_first_option_like_lm_eval(m):
+    # mutation: a last-index tie break makes `pred` disagree with the `acc` lm-eval computed
+    sample = {"doc_id": 0, "doc": {"label": 0}, "acc": 1.0, "filtered_resps": [(-2.0, False), (-2.0, False)]}
+    assert m.wiersze([sample])[0]["pred"] == 0
+
+
+def test_majority_comparison_uses_the_paired_se(m):
+    # mutation: the SE of the score alone hides that the model and the constant answer the same questions
+    rows = [{"acc": 1.0, "gold": 1}] * 2 + [{"acc": 0.0, "gold": 1}] + [{"acc": 1.0, "gold": 0}] * 2
+    wynik = m.wobec_wiekszosciowej(rows)
+    assert wynik["roznica"] == pytest.approx(0.2)
+    assert wynik["se"] == pytest.approx(mean_se([0.0, 0.0, -1.0, 1.0, 1.0])[1])
+
+
+def test_field_subsets_are_the_strict_ones_that_keep_text_and_options(m):
+    # mutation: a wrong range counts the full document twice or drops the two-field subset
+    docs = [{"text": str(i), "options": "o", "a": i % 2, "b": 0} for i in range(250)]
+    rows = [{"acc": float(i % 2)} for i in range(250)]
+    assert m.podzbiory_pol(rows, docs)["n"] == 3
+
+
+def test_subsample_sd_vanishes_on_the_full_split(m):
+    # mutation: without the finite population term the sample would look noisy against itself
+    rows = [{"acc": float(i % 2)} for i in range(10)]
+    assert m.sd_podproby(rows, n=10) == 0
+    assert m.sd_podproby(rows, n=5) == pytest.approx((statistics.variance(r["acc"] for r in rows) / 5 * 0.5) ** 0.5)
+
+
 def test_summary_uses_two_options_for_chance_and_the_split_for_majority(m):
     # mutation: k as the document index would make the chance level meaningless
     rows = [{"acc": 1.0, "gold": 0, "pred": 0}, {"acc": 0.0, "gold": 1, "pred": 0}, {"acc": 1.0, "gold": 0, "pred": 0}]
@@ -92,10 +120,12 @@ def test_yaml_differs_from_lm_eval_only_in_the_data_source():
     assert keep((TASK / "wsc273.yaml").read_text(encoding="utf-8")) == keep(original.read_text(encoding="utf-8"))
 
 
-def test_panel_is_the_frozen_ranking():
+def test_panel_is_the_frozen_ranking(m):
+    # mutation: any list of 200 sorted indices passes the shape checks; only the ranking of the ids pins this one
     panel = json.loads(PANEL.read_text(encoding="utf-8"))
     assert panel["n_splitu"] == 273 and len(panel["indeksy"]) == 200
     assert panel["indeksy"] == sorted(set(panel["indeksy"])) and max(panel["indeksy"]) < 273
+    assert panel["indeksy"] == m.panel_z([r["id"] for r in read_gz("slayer-1.06", "full")])
 
 
 # ---------- report recomputed from per-question files ----------
@@ -127,6 +157,17 @@ def test_acc_agrees_with_the_loglikelihoods(model, sample):
     for r in read_gz(model, sample):
         assert r["pred"] == max((0, 1), key=lambda i: r["logliki"][i])
         assert r["acc"] == float(r["pred"] == r["gold"])
+
+
+@pytest.mark.parametrize("key,sample,klasa", [("slayer_panel200", "panel200", 1), ("slayer_pelny", "full", 0)])
+def test_majority_comparison_recomputes_from_the_per_question_files(report, key, sample, klasa):
+    # mutation: comparing with the unpaired SE turns the verdict into "prawdopodobne"
+    rows = read_gz("slayer-1.06", sample)
+    value, se = mean_se([r["acc"] - (r["gold"] == klasa) for r in rows])
+    wiersz = report[key]["wobec_wiekszosciowej"]
+    assert wiersz["roznica"] == pytest.approx(value) and wiersz["se"] == pytest.approx(se)
+    assert wiersz["z"] == pytest.approx(value / se) and wiersz["werdykt"] == "szum"
+    assert report[key]["value"] - report[key]["bazy"]["majority_value"] == pytest.approx(value)
 
 
 def test_sample_run_is_the_frozen_list_and_matches_the_full_run():

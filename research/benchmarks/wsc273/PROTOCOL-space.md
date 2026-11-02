@@ -37,3 +37,18 @@ różne o ponad 1e-3) oraz obcięcie kontekstu w którymkolwiek żądaniu. <!-- 
 **Kontrola wrażliwości.** Tożsamość dokumentu ma dwa inne rozsądne warianty: indeks wiersza i dokument przed
 `process_docs`. Każdy daje inną próbkę. Wynik Slayera liczę na obu jako podzbiory przebiegu pełnego i podaję obok.
 Space może używać innej postaci kanonicznej, więc opis PR podaje rozstęp tych wariantów.
+
+## Korekty po wyniku
+
+Dopisane 2026-11-02, po pomiarze i po recenzji zewnętrznej. Tekst powyżej zostaje bez zmian.
+
+- **Kolejność.** Protokół, próbka i wyniki weszły do repo jednym commitem, więc historia gita nie potwierdza, że
+  protokół powstał przed pomiarem.
+- **SE wobec bazy większościowej.** Pierwszy raport porównywał z nią trafność przy SE samej trafności. Oba predyktory
+  odpowiadają na te same pytania, więc obowiązuje SE parowane (`research/README.md`). Werdykty na obu próbkach zmieniły
+  się z „prawdopodobne” na „szum”.
+- **Kontrola wrażliwości.** Po wyniku doszły warianty bez `sort_keys`, wariant pól treści, 63 podzbiory pól i SD
+  losowania 200 z 273 dokumentów. Rozstęp nazwanych wariantów to teraz 4,5 pkt zamiast 4,0 pkt. <!-- liczba-spoza-wynikow: rozstępy z results/wsc273.json przed korektą i po niej -->
+- **Status kontroli.** Źródło kontroli jest spoza listy `METODOLOGIA.md`. Próg się nie zmienia, ale wynik Slayera jest
+  wstępny, a kontrola nie jest nazywana spełnioną (`REPRODUCTION.md`).
+- **BOS.** Ustalono po pomiarze z plików tokenizerów i kodu, bo przebiegi go nie zapisały (`RECIPE.md`).

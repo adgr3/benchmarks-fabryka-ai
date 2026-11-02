@@ -39,9 +39,9 @@
   },
   "wobec_wiekszosciowej": {
    "roznica": 0.08499999999999996,
-   "se": 0.034653706828922715,
-   "z": 2.452840050261439,
-   "werdykt": "prawdopodobne"
+   "se": 0.0469028183786358,
+   "z": 1.8122578330754937,
+   "werdykt": "szum"
   }
  },
  "slayer_pelny": {
@@ -67,9 +67,9 @@
   },
   "wobec_wiekszosciowej": {
    "roznica": 0.08791208791208793,
-   "se": 0.029824615283989726,
-   "z": 2.9476352695580412,
-   "werdykt": "prawdopodobne"
+   "se": 0.044019965373240516,
+   "z": 1.9970957988424314,
+   "werdykt": "szum"
   }
  },
  "zgodnosc_panel_pelny": {
@@ -91,7 +91,29 @@
    "value": 0.605,
    "n": 200,
    "se": 0.034653706828922715
+  },
+  "przed_process_docs_bez_sort_keys": {
+   "value": 0.61,
+   "n": 200,
+   "se": 0.03457567623250011
+  },
+  "po_process_docs_bez_sort_keys": {
+   "value": 0.57,
+   "n": 200,
+   "se": 0.03509498954918332
+  },
+  "pola_tresci": {
+   "value": 0.575,
+   "n": 200,
+   "se": 0.03504304603451139
   }
  },
- "rozstep_wariantow": 0.040000000000000036
+ "rozstep_wariantow": 0.04500000000000004,
+ "podzbiory_pol": {
+  "n": 63,
+  "min": 0.55,
+  "mediana": 0.59,
+  "max": 0.63
+ },
+ "sd_podproby_200": 0.01801860988106096
 }
