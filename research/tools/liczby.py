@@ -55,6 +55,7 @@ USTAWIENIA_BENCHMARKOW = {
     # global values (wygaszanie, raport_formatu), so `with_global` lets the benchmark files use them too.
     "wikitext-2": {"aliasy": ["WikiText"], "skala": 100, "with_global": True,
                    "pomin": ["per_doc_bajty_page_detok"]},
+    "wsc273": {"aliasy": ["WSC273"], "skala": 1, "pomin": []},
 }
 WYGASZANIE = "slayer-1b/wygaszanie/wyniki"
 BLIMP = "benchmarks/blimp/results/blimp.json"
