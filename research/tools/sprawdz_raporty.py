@@ -143,8 +143,10 @@ def zbiory(liczby):
         skalowane = [x * b.get("skala", 1) for x in v]
         # "with_global": the benchmark's own values plus all global ones (its numbers live in both places)
         g = listy if b.get("with_global") else {"surowa": [], "skalowana": [], "z": []}
+        zety_wlasne = [x for sciezka, x in b["wartosci"].items() if sciezka.endswith("/z")]
         wynik[KLUCZ_BENCHMARKU + nazwa] = {"surowa": Zbior(v + skalowane + g["surowa"]),
-                                         "skalowana": Zbior([x * 100 for x in v] + g["skalowana"]), "z": Zbior(g["z"])}
+                                         "skalowana": Zbior([x * 100 for x in v] + g["skalowana"]),
+                                         "z": Zbior(zety_wlasne + g["z"])}
     return wynik
 
 
