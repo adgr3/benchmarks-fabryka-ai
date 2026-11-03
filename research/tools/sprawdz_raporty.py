@@ -192,11 +192,16 @@ def zadeklarowany_werdykt(tekst):
 
 
 # Para „z + werdykt” w jednej linii. Progi zostają w liczby.werdykt.
-_SLOWO_Z = r"pewn\w*|prawdopodobn\w*|probably|probable|certain|szum\w*|noise"
+# Tylko formy przymiotnika. „pewność” i „prawdopodobnie” to nie werdykt.
+_SLOWO_Z = (
+    r"pewne|pewna|pewny|prawdopodobne|prawdopodobna|prawdopodobny"
+    r"|certain|probable|likely|noise|szum"
+)
 _NAZWA_SLOWA_Z = (
-    ("pewne", re.compile(r"pewn\w*|certain", re.IGNORECASE)),
-    ("prawdopodobne", re.compile(r"prawdopodobn\w*|probably|probable", re.IGNORECASE)),
-    ("szum", re.compile(r"szum\w*|noise", re.IGNORECASE)),
+    ("pewne", re.compile(r"pewne|pewna|pewny|certain", re.IGNORECASE)),
+    ("prawdopodobne", re.compile(
+        r"prawdopodobne|prawdopodobna|prawdopodobny|probable|likely", re.IGNORECASE)),
+    ("szum", re.compile(r"szum|noise", re.IGNORECASE)),
 )
 _Z_EQ = re.compile(rf"(?<![\w])z\s*=\s*([−-]?)(\d+)(?:([.,])(\d+))?", re.IGNORECASE)
 _Z_BEZ_ROWNA = re.compile(
@@ -229,8 +234,11 @@ def z_verdict_pairs(linia):
     Werdykt przyklejony zaraz po liczbie (`z = 3,57, pewne`, `z = 1.23 (noise)`),
     kształt bez równości (`z 1,23, szum`), słowo przed nawiasem
     (`prawdopodobna w elipsie (z = -2,68)`) albo pierwsze słowo układu
-    `werdykt / werdykt` stojącego za `t =`. Samo z, iloraz, SNR i werdykt przy t
-    nie tworzą pary.
+    `werdykt / werdykt` stojącego za `t =`. Słowo musi być formą przymiotnika
+    (pewne/pewna/pewny, prawdopodobne/prawdopodobna/prawdopodobny, certain,
+    probable, likely, noise, szum). „pewność”, „prawdopodobnie” i werdykt
+    oddalony od liczby (`z = 2,5, ale to szum`) nie tworzą pary. Samo z, iloraz,
+    SNR i werdykt przy t też nie.
     """
     linia = bez_kodu(linia)
     spany = [(m.start(), m.end(), m, "eq") for m in _Z_EQ.finditer(linia)]

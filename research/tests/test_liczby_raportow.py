@@ -408,6 +408,13 @@ def test_werdykt_po_t_nie_jest_werdyktem_z():
         "(h) z -7,11 → pewne, w tekście: szum"]
 
 
+def test_pewnosc_i_prawdopodobnie_nie_sa_werdyktem():
+    # rzeczownik i przysłówek to nie przymiotnik werdyktu: kod 0, bez alarmu (h)
+    assert bledy("z = 1,5, pewność niska" + _WYJATEK_WERDYKTU) == []
+    assert bledy("z = 1,2, prawdopodobnie przez szum" + _WYJATEK_WERDYKTU) == []
+    assert bledy("z = 1,2 (prawdopodobnie przypadek)" + _WYJATEK_WERDYKTU) == []
+
+
 def test_z_bez_rownania_jak_w_piqa():
     assert bledy("(z 1,23, szum)" + _WYJATEK_WERDYKTU) == []
     assert _problemy_werdyktu("(z 1,23, pewne)") == ["(h) z 1,23 → szum, w tekście: pewne"]
