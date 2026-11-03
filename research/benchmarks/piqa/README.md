@@ -1,15 +1,17 @@
 # PIQA (Space T06)
 
-Slayer 1.06 on PIQA by the Space protocol, with the Pythia-1B v0 control (issue #16). The original card (stage A)
-and stages B–C follow in #57.
+> Praca idzie według [`METODOLOGIA.md`](../../METODOLOGIA.md).
 
-- [`PROTOCOL.md`](PROTOCOL.md): variant, panel, baselines, control threshold and claims, committed before the first
-  raw result.
-- [`results/PIQA.md`](results/PIQA.md): report generated from `results/piqa.json`.
-- [`RECIPE.md`](RECIPE.md): one entry per result.
-- [`SPACE_METHOD.md`](SPACE_METHOD.md): excerpt of the Space METHOD.md and the tasks_50.json entry T06 at the Space
-  revision used.
-- `piqa.py`: `fetch`, `score`, `report`; `instance.sh`: the same on a vast.ai GPU.
-- `results/raw/`: one line per question (log-probability of each option, picks, gold, source id), sha256 in
-  `SHA256SUMS`.
-- Test: `tests/test_piqa.py` (logic on dummies, independent recompute from the raw files).
+Slayer 1.06 na PIQA według protokołu Space, z kontrolą Pythia-1B v0 (zadanie #16). Karta oryginału (etap A) i
+etapy B–C idą w #57.
+
+- [`PROTOCOL.md`](PROTOCOL.md): wariant, panel, bazy, próg kontroli i tezy, zacommitowane przed pierwszym surowym
+  wynikiem.
+- [`results/PIQA.md`](results/PIQA.md): raport wygenerowany z `results/piqa.json`.
+- [`RECIPE.md`](RECIPE.md): jeden wpis na każdy wynik.
+- [`SPACE_METHOD.md`](SPACE_METHOD.md): wyciąg z METHOD.md Space i wpis T06 z tasks_50.json w użytej rewizji
+  Space.
+- `piqa.py`: `fetch`, `score`, `report`; `instance.sh`: to samo na GPU z vast.ai.
+- `results/raw/`: jedna linia na pytanie (log-prawdopodobieństwo każdej opcji, wybory, poprawna odpowiedź, id
+  źródła), sha256 w `SHA256SUMS`.
+- Test: `tests/test_piqa.py` (logika na atrapach, niezależne przeliczenie z surowych plików).

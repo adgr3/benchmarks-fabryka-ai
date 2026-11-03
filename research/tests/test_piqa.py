@@ -141,7 +141,7 @@ def has(text, s):
 
 def test_result_rows(d):
     for name, lines in (("Slayer 1.06", d["s"]), ("Pythia-1B v0", d["p"])):
-        for label, idx in (("full validation", None), ("Space panel", d["panel"])):
+        for label, idx in (("pełny walidacyjny", None), ("panel Space", d["panel"])):
             r = stats(part(lines, idx))
             has(d["text"], f"| {name} | {label} | {r['n']} | {f4(r['v'])} | {f4(r['se'])} | {f4(r['lo'])}–{f4(r['hi'])} | "
                            f"{f4(r['acc'])} | {f4(r['sol1'])} | {f4(r['most'])} |")
@@ -150,35 +150,35 @@ def test_result_rows(d):
 def test_headline_and_panel_gap(d):
     sf, sp = stats(d["s"]), stats(part(d["s"], d["panel"]))
     pf, pp = stats(d["p"]), stats(part(d["p"], d["panel"]))
-    has(d["text"], f"Space panel (the Space protocol, `min(200, N)` questions): {f4(sp['v'])} "
-                   f"(n 200, CI95 {f4(sp['lo'])}–{f4(sp['hi'])}). Beside it, the more precise full validation split: "
+    has(d["text"], f"panel Space (protokół Space, `min(200, N)` pytań): {f4(sp['v'])} "
+                   f"(n 200, CI95 {f4(sp['lo'])}–{f4(sp['hi'])}). Obok dokładniejszy pełny split walidacyjny: "
                    f"{f4(sf['v'])} (n 1838, CI95 {f4(sf['lo'])}–{f4(sf['hi'])})")
     fpc = math.sqrt((1838 - 200) / (1838 - 1))
     zs = (sp["v"] - sf["v"]) / (sp["se"] * fpc)
     zp = (pp["v"] - pf["v"]) / (pp["se"] * fpc)
-    has(d["text"], f"Panel minus full split: Slayer {f2(100 * (sp['v'] - sf['v']))} pts (z {f2(zs)}, {verdict(zs)}), "
-                   f"Pythia {f2(100 * (pp['v'] - pf['v']))} pts (z {f2(zp)}, {verdict(zp)})")
-    assert "easier" not in d["text"] and "overstates" not in d["text"]
+    has(d["text"], f"Panel minus pełny split: Slayer {f2(100 * (sp['v'] - sf['v']))} pkt (z {f2(zs)}, {verdict(zs)}), "
+                   f"Pythia {f2(100 * (pp['v'] - pf['v']))} pkt (z {f2(zp)}, {verdict(zp)})")
+    assert "łatwiejsz" not in d["text"] and "zawyża" not in d["text"]
 
 
 def test_deviations_stated(d):
-    has(d["text"], "`instrument: lm_eval_0.4.8`, and METHOD.md section 2 pins the English tasks to lm-eval commit `6d2abda4`")
-    has(d["text"], "ran on lm-eval 0.4.9.1")
-    has(d["text"], "as the `slayer` wrapper from #44")
-    assert "(as in the Space)" not in d["text"]
+    has(d["text"], "`instrument: lm_eval_0.4.8`, a METHOD.md w sekcji 2 przypina zadania angielskie do commita lm-eval `6d2abda4`")
+    has(d["text"], "szedł na lm-eval 0.4.9.1")
+    has(d["text"], "jak robi to wrapper `slayer` z #44")
+    assert "(jak w Space)" not in d["text"]
 
 
 def test_baselines_and_ties(d):
     g_full = [q["gold"] for q in d["s"]]
     g_pan = [q["gold"] for q in part(d["s"], d["panel"])]
     maj = lambda g: max(g.count(0), g.count(1)) / len(g)
-    has(d["text"], f"Baselines: random {f4(0.5)}; majority (share of the most frequent correct option) {f4(maj(g_full))} "
-                   f"on the full split (n 1838) and {f4(maj(g_pan))} on the panel (n 200); share of option 1 among correct "
-                   f"answers {f4(g_full.count(0) / 1838)} (full) and {f4(g_pan.count(0) / 200)} (panel).")
+    has(d["text"], f"Bazy: losowa {f4(0.5)}; większościowa (udział najczęstszej poprawnej opcji) {f4(maj(g_full))} "
+                   f"na pełnym splicie (n 1838) i {f4(maj(g_pan))} na panelu (n 200); udział opcji 1 wśród poprawnych "
+                   f"odpowiedzi {f4(g_full.count(0) / 1838)} (pełny) i {f4(g_pan.count(0) / 200)} (panel).")
     ties = lambda L: (sum(q["logprob"][0] == q["logprob"][1] for q in L),
                       sum(q["logprob"][0] / q["chars"][0] == q["logprob"][1] / q["chars"][1] for q in L))
     (sa, sn), (pa, pn) = ties(d["s"]), ties(d["p"])
-    has(d["text"], f"acc {sa} and acc_norm {sn} for Slayer, acc {pa} and acc_norm {pn} for Pythia (full split)")
+    has(d["text"], f"acc {sa} i acc_norm {sn} dla Slayera, acc {pa} i acc_norm {pn} dla Pythii (pełny split)")
 
 
 def test_diagnostics(d):
@@ -194,13 +194,13 @@ def test_diagnostics(d):
         has(d["text"], f"| {name} | {f4(mean_bpb)} | {f4(pooled)} | {f4(ln)} | {f4(la)} |")
     uneq = [q for q in d["s"] if q["chars"][0] != q["chars"][1]]
     gl = sum(q["gold"] == (0 if q["chars"][0] > q["chars"][1] else 1) for q in uneq) / len(uneq)
-    has(d["text"], f"on the {len(uneq)} questions whose options differ in length (characters); the correct option is the "
-                   f"longer one in {f4(gl)} of them")
+    has(d["text"], f"na {len(uneq)} pytaniach, których opcje różnią się długością (w znakach); poprawna opcja jest "
+                   f"dłuższa w {f4(gl)} z nich")
 
 
 def test_panel_digest(d):
     dig = hashlib.sha256("\n".join(d["s"][i]["source_id"] for i in d["panel"]).encode()).hexdigest()
-    has(d["text"], f"joined with `\\n`: `{dig}`")
+    has(d["text"], f"połączonych `\\n`: `{dig}`")
 
 
 def test_control(d):
@@ -209,32 +209,32 @@ def test_control(d):
         diff = 100 * (ours[metric] - PUB[metric])
         tol = max(2.0, 200 * PUB[f"{metric}_stderr"])
         has(d["text"], f"| {metric} | {f4(ours[metric])} | {f4(PUB[metric])} | {f2(diff)} | {f2(tol)} | "
-                       f"{'yes' if abs(diff) <= tol else 'no'} |")
+                       f"{'tak' if abs(diff) <= tol else 'nie'} |")
     se = math.sqrt(PUB["acc_norm"] * (1 - PUB["acc_norm"]) / PUB["n"])
     g = [q["gold"] for q in d["s"]]
     maj = max(g.count(0), g.count(1)) / len(g)
-    has(d["text"], f"lies {f2((PUB['acc_norm'] - 0.5) / se)} standard errors over the random baseline and "
-                   f"{f2((PUB['acc_norm'] - maj) / se)} over the majority baseline (standard error {f4(se)})")
+    has(d["text"], f"leży {f2((PUB['acc_norm'] - 0.5) / se)} błędów standardowych ponad bazą losową i "
+                   f"{f2((PUB['acc_norm'] - maj) / se)} ponad bazą większościową (błąd standardowy {f4(se)})")
     passed = all(abs(ours[k] - PUB[k]) <= max(0.02, 2 * PUB[f"{k}_stderr"]) for k in ours) and PUB["acc_norm"] - max(0.5, maj) > 2 * se
-    has(d["text"], f"Control passed: {'yes' if passed else 'no'}.")
+    has(d["text"], f"Kontrola zaliczona: {'tak' if passed else 'nie'}.")
 
 
 def test_comparisons(d):
-    for label, idx in (("full", None), ("panel", d["panel"])):
+    for label, idx in (("pełny", None), ("panel", d["panel"])):
         S, P = part(d["s"], idx), part(d["p"], idx)
         r = stats(S)
         g = [q["gold"] for q in S]
         maj = max(g.count(0), g.count(1)) / len(g)
-        for name, base in (("random", 0.5), ("majority", maj)):
+        for name, base in (("losowa", 0.5), ("większościowa", maj)):
             z = (r["v"] - base) / r["se"]
-            has(d["text"], f"| Slayer 1.06 − {name} baseline | {label} | {f2(100 * (r['v'] - base))} | {f2(z)} | {verdict(z)} |")
+            has(d["text"], f"| Slayer 1.06 − baza {name} | {label} | {f2(100 * (r['v'] - base))} | {f2(z)} | {verdict(z)} |")
         diff = np.array([float(pick_norm(a) == a["gold"]) - float(pick_norm(b) == b["gold"]) for a, b in zip(S, P)])
         se = diff.std(ddof=1) / math.sqrt(len(diff))
         z = diff.mean() / se
-        has(d["text"], f"| Slayer 1.06 − Pythia-1B v0 (paired SE) | {label} | {f2(100 * diff.mean())} | {f2(z)} | {verdict(z)} |")
-        if label == "full":
-            has(d["text"], f"Slayer 1.06 scores {f4(r['v'])} on the full split, {f2(100 * (r['v'] - 0.5))} pts over the random "
-                           f"baseline (z {f2((r['v'] - 0.5) / r['se'])}, {verdict((r['v'] - 0.5) / r['se'])})")
+        has(d["text"], f"| Slayer 1.06 − Pythia-1B v0 (SE parowane) | {label} | {f2(100 * diff.mean())} | {f2(z)} | {verdict(z)} |")
+        if label == "pełny":
+            has(d["text"], f"Slayer 1.06 ma {f4(r['v'])} na pełnym splicie, {f2(100 * (r['v'] - 0.5))} pkt ponad bazą "
+                           f"losową (z {f2((r['v'] - 0.5) / r['se'])}, {verdict((r['v'] - 0.5) / r['se'])})")
 
 
 def test_gpu_repeats(d):
