@@ -401,6 +401,14 @@ def test_werdykt_przed_nawiasem_nie_bierze_slowa_nastepnego_z():
     assert bledy(tekst + _WYJATEK_WERDYKTU) == []
 
 
+def test_werdykt_przed_nawiasem_bierze_slowo_najblizsze_z():
+    # „pewne” dotyczy wyników wobec bazy, a werdyktem z = 0,40 jest „szum” tuż przed nawiasem
+    tekst = "Oba wyniki są pewne wobec bazy, ale różnica między nimi to szum (z = 0,40)."
+    assert bledy(tekst + _WYJATEK_WERDYKTU) == []
+    zly = "Oba wyniki to szum wobec bazy, ale różnica między nimi jest pewna (z = 0,40)."
+    assert _problemy_werdyktu(zly) == ["(h) z 0,40 → szum, w tekście: pewna"]
+
+
 def test_werdykt_po_t_nie_jest_werdyktem_z():
     assert bledy("z = 10.81 | certain | t = 3.07 | probable" + _WYJATEK_WERDYKTU) == []
     assert bledy("z = -7,11 | t = -3,79 | pewne / prawdopodobne" + _WYJATEK_WERDYKTU) == []

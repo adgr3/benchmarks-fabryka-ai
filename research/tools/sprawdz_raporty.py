@@ -274,7 +274,7 @@ def z_verdict_pairs(linia):
         region = linia[wczesniej:start]
         ciecie = max(region.rfind(". "), region.rfind("; "))
         od = wczesniej + ciecie + 2 if ciecie >= 0 else wczesniej
-        znalezione = _Z_JAKIEKOLWIEK.search(linia, od, start)
+        znalezione = ([*_Z_JAKIEKOLWIEK.finditer(linia, od, start)] or [None])[-1]
         if znalezione and "(" in linia[znalezione.end():start]:
             slowo = znalezione.group(0)
             pary.append((zapis, wartosc, _nazwa_werdyktu(slowo), slowo))
