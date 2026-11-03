@@ -14,7 +14,8 @@
   "benchmarks/ewok-pl/results/raport_ewok.json",
   "benchmarks/piqa/results/piqa.json",
   "benchmarks/wikitext-2/results/bajty.json",
-  "benchmarks/wikitext-2/results/mianownik.json"
+  "benchmarks/wikitext-2/results/mianownik.json",
+  "benchmarks/wsc273/results/wsc273.json"
  ],
  "benchmarki": {
   "arc-easy": {
@@ -3295,6 +3296,87 @@
     "wikitext-2/mianownik/space_byte_ppl": 1.846,
     "wikitext-2/mianownik/roznica_przed_proc": 2.521197543645348,
     "wikitext-2/mianownik/roznica_po_proc": 0.015375033101783231
+   }
+  },
+  "wsc273": {
+   "zrodla": [
+    "benchmarks/wsc273/results/wsc273.json"
+   ],
+   "aliasy": [
+    "WSC273"
+   ],
+   "pliki": [
+    "benchmarks/wsc273/"
+   ],
+   "skala": 1,
+   "with_global": false,
+   "wartosci": {
+    "wsc273/wsc273/kontrola/value": 0.6227106227106227,
+    "wsc273/wsc273/kontrola/n": 273,
+    "wsc273/wsc273/kontrola/se": 0.029389755560222004,
+    "wsc273/wsc273/kontrola/ci95/0": 0.5641025641025641,
+    "wsc273/wsc273/kontrola/ci95/1": 0.6813186813186813,
+    "wsc273/wsc273/kontrola/opublikowana": 0.6666666666666666,
+    "wsc273/wsc273/kontrola/se_opublikowane": 0.028583097523751506,
+    "wsc273/wsc273/kontrola/porownanie/roznica": -0.04395604395604391,
+    "wsc273/wsc273/kontrola/porownanie/se": 0.028583097523751506,
+    "wsc273/wsc273/kontrola/porownanie/z": -1.5378334667723836,
+    "wsc273/wsc273/slayer_panel200/value": 0.605,
+    "wsc273/wsc273/slayer_panel200/n": 200,
+    "wsc273/wsc273/slayer_panel200/se": 0.034653706828922715,
+    "wsc273/wsc273/slayer_panel200/ci95/0": 0.535,
+    "wsc273/wsc273/slayer_panel200/ci95/1": 0.675,
+    "wsc273/wsc273/slayer_panel200/bazy/chance_value": 0.5,
+    "wsc273/wsc273/slayer_panel200/bazy/majority_value": 0.52,
+    "wsc273/wsc273/slayer_panel200/bazy/majority_prediction_share": 0.555,
+    "wsc273/wsc273/slayer_panel200/baza_wiekszosciowa_split": 0.5018315018315018,
+    "wsc273/wsc273/slayer_panel200/wobec_losowej/roznica": 0.10499999999999998,
+    "wsc273/wsc273/slayer_panel200/wobec_losowej/se": 0.034653706828922715,
+    "wsc273/wsc273/slayer_panel200/wobec_losowej/z": 3.0299788856170724,
+    "wsc273/wsc273/slayer_panel200/wobec_wiekszosciowej/roznica": 0.08499999999999996,
+    "wsc273/wsc273/slayer_panel200/wobec_wiekszosciowej/se": 0.0469028183786358,
+    "wsc273/wsc273/slayer_panel200/wobec_wiekszosciowej/z": 1.8122578330754937,
+    "wsc273/wsc273/slayer_pelny/value": 0.5897435897435898,
+    "wsc273/wsc273/slayer_pelny/n": 273,
+    "wsc273/wsc273/slayer_pelny/se": 0.029824615283989726,
+    "wsc273/wsc273/slayer_pelny/ci95/0": 0.5274725274725275,
+    "wsc273/wsc273/slayer_pelny/ci95/1": 0.6483516483516484,
+    "wsc273/wsc273/slayer_pelny/bazy/chance_value": 0.5,
+    "wsc273/wsc273/slayer_pelny/bazy/majority_value": 0.5018315018315018,
+    "wsc273/wsc273/slayer_pelny/bazy/majority_prediction_share": 0.5347985347985348,
+    "wsc273/wsc273/slayer_pelny/baza_wiekszosciowa_split": 0.5018315018315018,
+    "wsc273/wsc273/slayer_pelny/wobec_losowej/roznica": 0.08974358974358976,
+    "wsc273/wsc273/slayer_pelny/wobec_losowej/se": 0.029824615283989726,
+    "wsc273/wsc273/slayer_pelny/wobec_losowej/z": 3.0090443376738336,
+    "wsc273/wsc273/slayer_pelny/wobec_wiekszosciowej/roznica": 0.08791208791208793,
+    "wsc273/wsc273/slayer_pelny/wobec_wiekszosciowej/se": 0.044019965373240516,
+    "wsc273/wsc273/slayer_pelny/wobec_wiekszosciowej/z": 1.9970957988424314,
+    "wsc273/wsc273/zgodnosc_panel_pelny/max_roznica_loglik": 0.0,
+    "wsc273/wsc273/zgodnosc_panel_pelny/rozne_acc": 0,
+    "wsc273/wsc273/warianty_tozsamosci/indeks_wiersza/value": 0.565,
+    "wsc273/wsc273/warianty_tozsamosci/indeks_wiersza/n": 200,
+    "wsc273/wsc273/warianty_tozsamosci/indeks_wiersza/se": 0.03514328173714403,
+    "wsc273/wsc273/warianty_tozsamosci/przed_process_docs/value": 0.57,
+    "wsc273/wsc273/warianty_tozsamosci/przed_process_docs/n": 200,
+    "wsc273/wsc273/warianty_tozsamosci/przed_process_docs/se": 0.03509498954918332,
+    "wsc273/wsc273/warianty_tozsamosci/po_process_docs/value": 0.605,
+    "wsc273/wsc273/warianty_tozsamosci/po_process_docs/n": 200,
+    "wsc273/wsc273/warianty_tozsamosci/po_process_docs/se": 0.034653706828922715,
+    "wsc273/wsc273/warianty_tozsamosci/przed_process_docs_bez_sort_keys/value": 0.61,
+    "wsc273/wsc273/warianty_tozsamosci/przed_process_docs_bez_sort_keys/n": 200,
+    "wsc273/wsc273/warianty_tozsamosci/przed_process_docs_bez_sort_keys/se": 0.03457567623250011,
+    "wsc273/wsc273/warianty_tozsamosci/po_process_docs_bez_sort_keys/value": 0.57,
+    "wsc273/wsc273/warianty_tozsamosci/po_process_docs_bez_sort_keys/n": 200,
+    "wsc273/wsc273/warianty_tozsamosci/po_process_docs_bez_sort_keys/se": 0.03509498954918332,
+    "wsc273/wsc273/warianty_tozsamosci/pola_tresci/value": 0.575,
+    "wsc273/wsc273/warianty_tozsamosci/pola_tresci/n": 200,
+    "wsc273/wsc273/warianty_tozsamosci/pola_tresci/se": 0.03504304603451139,
+    "wsc273/wsc273/rozstep_wariantow": 0.04500000000000004,
+    "wsc273/wsc273/podzbiory_pol/n": 63,
+    "wsc273/wsc273/podzbiory_pol/min": 0.55,
+    "wsc273/wsc273/podzbiory_pol/mediana": 0.59,
+    "wsc273/wsc273/podzbiory_pol/max": 0.63,
+    "wsc273/wsc273/sd_podproby_200": 0.01801860988106096
    }
   }
  },

@@ -257,6 +257,12 @@ def test_liczby_benchmarku_sprawdzane_w_jego_plikach_i_nie_wyciekaja():
     assert [p for _, _, p in bledy("Bielik ma 63,4%.") if "63,4" in p]
 
 
+def test_wlasne_z_benchmarku_sprawdzane_w_jego_plikach():
+    # results/wsc273.json: Slayer 1.06 na panelu 200 wobec bazy losowej, z = 3,03
+    assert not bledy("| panel 200 | losowa | z = 3,03 | pewne |", "benchmarks/wsc273/README.md")
+    assert [p for _, _, p in bledy("| panel 200 | losowa | z = 3,77 | pewne |", "benchmarks/wsc273/README.md") if "3,77" in p]
+
+
 def test_number_format_by_path_prefix():
     assert S.file_number_format("benchmarks/blimp/results/BLIMP.md") == (True, "blimp")  # generated English report
     assert S.file_number_format("benchmarks/blimp/README.md") == (False, "blimp")       # Polish docs, BLiMP numbers
