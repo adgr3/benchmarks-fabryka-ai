@@ -387,6 +387,10 @@ def render(o):
         f"Slayer 1.06, acc_norm, Space panel (the Space protocol, `min(200, N)` questions): {f3(sp['value'])} "
         f"(n {sp['n']}, CI95 {f3(sp['ci95'][0])}–{f3(sp['ci95'][1])}). Beside it, the more precise full validation split: "
         f"{f3(sf['value'])} (n {sf['n']}, CI95 {f3(sf['ci95'][0])}–{f3(sf['ci95'][1])}); the main claim below uses the full split.",
+        "*Added after the measurement (exploratory, not in PROTOCOL.md): which of the two numbers goes to the Space and the "
+        "panel-minus-full-split test. PROTOCOL.md did not fix the number for the Space; the panel follows the Space protocol "
+        "(`bench50-v0.3.1-panel200`), but the canonical row form behind the source id is not defined in METHOD.md, so it is "
+        "not certain that our panel is the Space's panel.*",
         f"Panel minus full split: Slayer {p1(s['panel_minus_full_pts'])} pts (z {p1(s['panel_minus_full_z'])}, "
         f"{s['panel_minus_full_verdict']}), Pythia {p1(pt['panel_minus_full_pts'])} pts (z {p1(pt['panel_minus_full_z'])}, "
         f"{pt['panel_minus_full_verdict']}); z = difference / (panel SE × sqrt((N − n) / (N − 1))), the finite-population "
@@ -419,7 +423,7 @@ def render(o):
               f"for Slayer, acc {pt['full']['ties_acc']} and acc_norm {pt['full']['ties_acc_norm']} for Pythia (full split); "
               "a tie would go to option 1, as lm-eval's argmax.",
               "",
-              "## Diagnostics (full split, not used for any claim)",
+              "## Diagnostics (full split, exploratory: added after the measurement, not used for any claim)",
               "",
               "| model | BPB of the correct answer, mean over questions | BPB, pooled | picks the longer option (acc_norm) | "
               "picks the longer option (acc) |",

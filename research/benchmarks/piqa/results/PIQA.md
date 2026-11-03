@@ -7,6 +7,7 @@ Slayer 1.06 is a checkpoint at about 1/8 of its training plan, without LR decay;
 ## Number for the Space
 
 Slayer 1.06, acc_norm, Space panel (the Space protocol, `min(200, N)` questions): 0,6800 (n 200, CI95 0,6150–0,7450). Beside it, the more precise full validation split: 0,6415 (n 1838, CI95 0,6197–0,6632); the main claim below uses the full split.
+*Added after the measurement (exploratory, not in PROTOCOL.md): which of the two numbers goes to the Space and the panel-minus-full-split test. PROTOCOL.md did not fix the number for the Space; the panel follows the Space protocol (`bench50-v0.3.1-panel200`), but the canonical row form behind the source id is not defined in METHOD.md, so it is not certain that our panel is the Space's panel.*
 Panel minus full split: Slayer 3,85 pts (z 1,23, szum), Pythia 2,05 pts (z 0,69, szum); z = difference / (panel SE × sqrt((N − n) / (N − 1))), the finite-population correction, since the panel is drawn from the full split.
 
 Main claim: Slayer 1.06 scores 0,6415 on the full split, 14,15 pts over the random baseline (z 12,64, pewne). The claim is about the score, not about physical reasoning: the Space flags T06 for Slayer 1.06 as contaminated (`contamination: flagged`), and without the training corpus we cannot say how much of the margin comes from questions seen in training (no hit-free value). Falsified if z against the random baseline were below 3, or if the control fell outside its tolerance.
@@ -24,7 +25,7 @@ SE = sample sd / sqrt n; CI95 = percentile bootstrap over questions, 10 000 repl
 Baselines: random 0,5000; majority (share of the most frequent correct option) 0,5049 on the full split (n 1838) and 0,5100 on the panel (n 200); share of option 1 among correct answers 0,4951 (full) and 0,5100 (panel).
 Ties (equal scores of both options): acc 0 and acc_norm 0 for Slayer, acc 0 and acc_norm 0 for Pythia (full split); a tie would go to option 1, as lm-eval's argmax.
 
-## Diagnostics (full split, not used for any claim)
+## Diagnostics (full split, exploratory: added after the measurement, not used for any claim)
 
 | model | BPB of the correct answer, mean over questions | BPB, pooled | picks the longer option (acc_norm) | picks the longer option (acc) |
 |---|---:|---:|---:|---:|

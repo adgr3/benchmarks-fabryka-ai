@@ -16,7 +16,10 @@ Common to every entry:
   `SlayerLab/Slayer1B-Benchmarks` @ `2d3d73f5c0ee431df9d38bd9619ccb05a26bf9a9`.
 - Seeds: python 0, numpy 1234, torch 1234, fewshot 1234 (0-shot); bootstrap seed 20261028, 10 000 replicates.
 - Precision: float32, batch 1, `NVIDIA_TF32_OVERRIDE=0`.
-- Date: 2026-11-01.
+- Date: 2026-11-01. The hour of scoring is not recorded (`meta.json` has the date only); the push of PROTOCOL.md
+  (16:10:03Z) precedes the push of the raw results (16:13:49Z), which shows the order of commits, not of scoring.
+- GPU comparison: only `seconds_score` is recorded; price per hour, setup and download times promised in PROTOCOL.md
+  were not recorded.
 - Setup on the instance (in `/workspace`, repo cloned to `/workspace/repo`):
   `bash repo/research/benchmarks/piqa/instance.sh setup 5400` (lockfile, data, weights; destroys the instance after
   5400 s).

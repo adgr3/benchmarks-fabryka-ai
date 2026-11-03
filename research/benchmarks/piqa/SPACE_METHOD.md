@@ -7,8 +7,9 @@ Excerpt of two files of the Space `SlayerLab/Slayer1B-Benchmarks` at revision
 - https://huggingface.co/spaces/SlayerLab/Slayer1B-Benchmarks/blob/2d3d73f5c0ee431df9d38bd9619ccb05a26bf9a9/tasks_50.json
 
 METHOD.md text copied verbatim from the instance's terminal output; the T06 entry as printed there by
-`json.dumps(entry, indent=1)` (same keys and values, whitespace of the original file not kept). sha256 of the full
-METHOD.md and tasks_50.json: not determined; this is a copy from the terminal output at revision `2d3d73f5`. The Space's
+`json.dumps(entry, indent=1)` (same keys and values, whitespace of the original file not kept). sha256 at revision
+`2d3d73f5`: METHOD.md `8709632a394a3d69fa56567404e6543f7305d49fc97c9d381fbfad46d86628ae`, tasks_50.json
+`fcfc45d805243e7ea4aa12bf836940ea086ecafe9fe3e592bf8850890ca8cf6b`. The Space's
 `METHOD.md` is version v0.3.1. Only sections 2, 3 and 8 and the T06 entry are copied here.
 
 ## METHOD.md, section 2 (Harness and runtime)
@@ -77,6 +78,6 @@ METHOD.md and tasks_50.json: not determined; this is a copy from the terminal ou
 
 - `benchmark_id` = `piqa`, `member_task` = `piqa` (one member, so no group allocation).
 - PIQA rows have no native id, so the source id is the SHA-256 of the canonical row. The canonical form is not
-  defined in METHOD.md; we use JSON with sorted keys and separators `,` and `:` (the reading that matched the Space
-  value on BLiMP, `benchmarks/blimp/results/BLIMP.md`). The validation split has no byte-identical rows, so no ordinal.
+  defined in METHOD.md; we use JSON with sorted keys and separators `,` and `:` (on BLiMP this reading gave the Space
+  value to all printed digits, but no format reproduced the Space `source_id_digest`, `benchmarks/blimp/results/BLIMP.md`). The validation split has no byte-identical rows, so no ordinal.
 - tasks_50.json does not list the `refs/convert/parquet` commit; we used `142c51238b3ca2bc61e9a075913871b8b600e8e1`.
